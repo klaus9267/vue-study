@@ -1,26 +1,34 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="name">
+    {{ name }}
+    <!-- {{ greeting(name) }} -->
+  </div>
+  <button class="btn btn-primary" v-on:click="consoleLog">Click</button>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  setup() {
+    const name = 'minho1';
+
+    // const greeting = name => {
+    //   return 'Hello ' + name;
+    // };
+    const consoleLog = () => {
+      console.log('hello world');
+    };
+
+    return {
+      name,
+      consoleLog,
+      // greeting,
+    };
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.name {
+  color: red;
 }
 </style>
