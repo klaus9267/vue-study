@@ -1,27 +1,33 @@
 <template>
-  <div class="name">
+  // v:bind -> :
+  <div :class="nameClass">
     {{ name }}
-    <!-- {{ greeting(name) }} -->
   </div>
-  <button class="btn btn-primary" v-on:click="consoleLog">Click</button>
+  <input :type="type" :value="name" />
+
+  <button class="btn btn-primary" @click="updateName">Click</button>
+  //v-on -> @
 </template>
 
 <script>
+import { ref } from 'vue';
 export default {
   setup() {
-    const name = 'minho1';
+    // const reactive1 = reactive({}) reactive 는 arr , object를 설정할 때 사용 나머지는 ref
+    const name = ref('minho1');
+    const type = ref('number');
+    const nameClass = ref('name');
 
-    // const greeting = name => {
-    //   return 'Hello ' + name;
-    // };
-    const consoleLog = () => {
-      console.log('hello world');
+    const updateName = () => {
+      name.value = 'minhosss';
+      type.value = 'text';
     };
 
     return {
       name,
-      consoleLog,
-      // greeting,
+      type,
+      updateName,
+      nameClass,
     };
   },
 };
