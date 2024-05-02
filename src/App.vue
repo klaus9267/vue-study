@@ -1,12 +1,8 @@
 <template>
-  // v:bind -> :
-  <div :class="nameClass">
-    {{ name }}
-  </div>
-  <input :type="type" :value="name" />
+  <!-- // v:bind -> : //v-on -> @ -->
+  <input type="text" :value="name" @input="updateName" />
 
-  <button class="btn btn-primary" @click="updateName">Click</button>
-  //v-on -> @
+  <button class="btn btn-primary" @click="onSubmit">Click</button>
 </template>
 
 <script>
@@ -14,20 +10,20 @@ import { ref } from 'vue';
 export default {
   setup() {
     // const reactive1 = reactive({}) reactive 는 arr , object를 설정할 때 사용 나머지는 ref
-    const name = ref('minho1');
-    const type = ref('number');
-    const nameClass = ref('name');
+    const name = ref('Minho');
 
-    const updateName = () => {
-      name.value = 'minhosss';
-      type.value = 'text';
+    const onSubmit = () => {
+      console.log(name.value);
+    };
+
+    const updateName = e => {
+      name.value = e.target.value;
     };
 
     return {
       name,
-      type,
+      onSubmit,
       updateName,
-      nameClass,
     };
   },
 };
