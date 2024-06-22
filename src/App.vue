@@ -40,10 +40,7 @@ export default {
   setup() {
 
     const todo = ref('');
-    const todos = ref([
-      {id: 1, subject: "휴대폰 사기"},
-      {id: 2, subject: "장보기"}
-    ]);
+    const todos = ref([]);
     // const reactive1 = reactive({}) reactive 는 arr , object를 설정할 때 사용 나머지는 ref
     const hasError = ref(false);
 
