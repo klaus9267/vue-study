@@ -6,7 +6,11 @@
     <div v-if="!todos.length" class="alert alert-danger p-2 mt-2">
       추가된 Todo가 없습니다
     </div>
-    <TodoList :todos="todos" @toggle-todo="toggleTodo" @click="toggleTodo"/>
+    <TodoList
+        :todos="todos"
+        @toggle-todo="toggleTodo"
+        @delete-todo="deleteTodo"
+    />
   </div>
   <!-- // v:bind -> : //v-on -> @ -->
   <!--  v-model -> 양반향 바인딩-->
@@ -35,9 +39,7 @@ export default {
 
     }
     const toggleTodo = (index) => {
-      console.log(todos.value[index]);
       todos.value[index].completed = !todos.value[index].completed;
-      console.log(todos.value[index]);
     }
 
     const deleteTodo = (index) => {
