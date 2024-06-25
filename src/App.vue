@@ -47,15 +47,16 @@ export default {
     //   textDecoration: 'line-through',
     //   color: 'gray',
     // }
-    const addTodo = (todo) => {
+    const addTodo = async (todo) => {
       error.value = '';
-      axios.post('http://localhost:3000/todos', todo)
-          .then(res => {
-            todos.value.push(res.data);
-          }).catch(err => {
+      try {
+        const res = await axios.post('http://localhost:3000/todos', todo);
+        todos.value.push(res.data);
+      } catch (err) {
         console.log(err);
         error.value = 'Something went wrong.';
-      });
+
+      }
     }
 
     const toggleTodo = (index) => {
