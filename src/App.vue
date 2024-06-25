@@ -41,6 +41,18 @@ export default {
   setup() {
     const todos = ref([]);
     const error = ref('')
+
+    const getTodos = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/todos");
+        todos.value = res.data;
+      } catch (err) {
+        console.log(err);
+        error.value = 'Something went wrong.';
+      }
+    }
+
+    getTodos();
     // const todos = ref([]);
     // const reactive1 = reactive({}) reactive 는 arr , object를 설정할 때 사용 나머지는 ref
     // const todoStyle = {
