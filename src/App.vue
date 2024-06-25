@@ -10,6 +10,7 @@
     />
     <hr>
     <TodoSimpleForm @add-todo="addTodo"/>
+    <div v-if="error.length" class="alert alert-danger p-2 mt-2">{{ error }}</div>
     <div v-if="!todos.length" class="alert alert-danger p-2 mt-2">
       추가된 Todo가 없습니다
     </div>
@@ -30,6 +31,7 @@
 import {computed, ref} from 'vue';
 import TodoList from "@/components/TodoList.vue";
 import TodoSimpleForm from "@/components/TodoSimpleForm.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -38,14 +40,22 @@ export default {
   },
   setup() {
     const todos = ref([]);
+    const error = ref('')
+    // const todos = ref([]);
     // const reactive1 = reactive({}) reactive 는 arr , object를 설정할 때 사용 나머지는 ref
     // const todoStyle = {
     //   textDecoration: 'line-through',
     //   color: 'gray',
     // }
-
     const addTodo = (todo) => {
-      todos.value.push(todo);
+      error.value = '';
+      axios.post('http://localhost:3000/todos', todo)
+          .then(res => {
+            todos.value.push(res.data);
+          }).catch(err => {
+        console.log(err);
+        error.value = 'Something went wrong.';
+      });
     }
 
     const toggleTodo = (index) => {
@@ -73,6 +83,7 @@ export default {
       toggleTodo,
       searchText,
       filteredTodos,
+      error,
     };
   },
 };
