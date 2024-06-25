@@ -39,6 +39,7 @@ export default {
     TodoList,
   },
   setup() {
+    // const reactive1 = reactive({}) reactive 는 arr , object를 설정할 때 사용 나머지는 ref
     const todos = ref([]);
     const error = ref('')
 
@@ -53,21 +54,19 @@ export default {
     }
 
     getTodos();
-    // const todos = ref([]);
-    // const reactive1 = reactive({}) reactive 는 arr , object를 설정할 때 사용 나머지는 ref
-    // const todoStyle = {
-    //   textDecoration: 'line-through',
-    //   color: 'gray',
-    // }
+
     const addTodo = async (todo) => {
       error.value = '';
+      const {subject, completed} = todo;
       try {
-        const res = await axios.post('http://localhost:3000/todos', todo);
+        const res = await axios.post('http://localhost:3000/todos', {
+          subject,
+          completed
+        });
         todos.value.push(res.data);
       } catch (err) {
         console.log(err);
         error.value = 'Something went wrong.';
-
       }
     }
 
@@ -75,8 +74,16 @@ export default {
       todos.value[index].completed = !todos.value[index].completed;
     }
 
-    const deleteTodo = (index) => {
-      todos.value.splice(index, 1);
+    const deleteTodo = async (index) => {
+      error.value = '';
+      const id = todos.value[index].id;
+      try {
+        await axios.delete('http://localhost:3000/todos/' + id);
+        todos.value.splice(index, 1);
+      } catch (err) {
+        console.log(err);
+        error.value = 'Something went wrong.';
+      }
     }
 
     const searchText = ref('')
