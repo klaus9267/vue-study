@@ -22,7 +22,7 @@
         @toggle-todo="toggleTodo"
         @delete-todo="deleteTodo"
     />
-    <hr>
+    <hr v-if="todos.length">
     <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li v-if="currentPage !== 1" class="page-item">
@@ -38,7 +38,7 @@
             {{ page }}
           </a>
         </li>
-        <li v-if="numberOfPages !== currentPage" class="page-item">
+        <li v-if="numberOfPages !== currentPage && todos.length" class="page-item">
           <a class="page-link pointer" @click="getTodos(currentPage+1)">Next</a>
         </li>
       </ul>
@@ -76,7 +76,7 @@ export default {
       currentPage.value = page;
       try {
         const res = await axios.get(
-            `http://localhost:3000/todos?subject_like=${searchText.value}&_page=${page}&_limit=${limit}`
+            `http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`
         );
         numberOfTodos.value = res.headers['x-total-count'];
         todos.value = res.data;
@@ -91,8 +91,8 @@ export default {
     const addTodo = async (todo) => {
       error.value = '';
       try {
-        const res = await axios.post('http://localhost:3000/todos', todo);
-        todos.value.push(res.data);
+        await axios.post('http://localhost:3000/todos', todo);
+        getTodos(1);
       } catch (err) {
         console.log(err);
         error.value = 'Something went wrong.';
@@ -118,7 +118,7 @@ export default {
       const id = todos.value[index].id;
       try {
         await axios.delete('http://localhost:3000/todos/' + id);
-        todos.value.splice(index, 1);
+        getTodos(1);
       } catch (err) {
         console.log(err);
         error.value = 'Something went wrong.';
