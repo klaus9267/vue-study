@@ -1,6 +1,5 @@
 <template>
-  <router-view/>
-  <div class="container">
+  <div>
     <h1>To-Do List</h1>
     <input
         class="form-control"
@@ -61,6 +60,7 @@ export default {
     TodoList,
   },
   setup() {
+    const url = process.env.VUE_APP_DB;
     // const reactive1 = reactive({}) reactive 는 arr , object를 설정할 때 사용 나머지는 ref
     const todos = ref([]);
     const error = ref('')
@@ -77,7 +77,7 @@ export default {
       currentPage.value = page;
       try {
         const res = await axios.get(
-            `http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`
+            `${url}/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`
         );
         numberOfTodos.value = res.headers['x-total-count'];
         todos.value = res.data;
@@ -92,7 +92,7 @@ export default {
     const addTodo = async (todo) => {
       error.value = '';
       try {
-        await axios.post('http://localhost:3000/todos', todo);
+        await axios.post(`${url}/todos`, todo);
         getTodos(1);
       } catch (err) {
         console.log(err);
@@ -104,7 +104,7 @@ export default {
       error.value = '';
       const id = todos.value[index].id;
       try {
-        await axios.patch('http://localhost:3000/todos/' + id, {
+        await axios.patch(`${url}/todos/` + id, {
           completed: checked
         });
         todos.value[index].completed = checked
@@ -118,7 +118,7 @@ export default {
       error.value = '';
       const id = todos.value[index].id;
       try {
-        await axios.delete('http://localhost:3000/todos/' + id);
+        await axios.delete(`${url}/todos/` + id);
         getTodos(1);
       } catch (err) {
         console.log(err);

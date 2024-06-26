@@ -1,17 +1,41 @@
 <template>
-  <div>
-    Todo Page
+  <h1>To-Do Page</h1>
+  <div v-if="loading">
+    Loading...
   </div>
+  <form v-else>
+    <div class="form-group">
+      <label>Todo Subject</label>
+      <input v-model="todo.subject" type="text" class="form-control">
+    </div>
+    <button class="btn btn-primary">Save</button>
+  </form>
 </template>
 
 <script>
 import {useRoute} from "vue-router";
+import axios from "axios";
+import {ref} from "vue";
 
 export default {
   setup() {
+    const url = process.env.VUE_APP_DB;
     const route = useRoute();
+    const todo = ref(null);
+    const loading = ref(true);
 
-    return {}
+    const getTodo = async () => {
+      const res = await axios.get(url + '/todos/' + route.params.id);
+      todo.value = res.data;
+      loading.value = false;
+    }
+
+    getTodo();
+
+    return {
+      todo,
+      loading,
+    };
   }
 }
 </script>
