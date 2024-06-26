@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from "vue-router";
 import Home from "@/pages/Home.vue";
 import Todos from "@/pages/todos/Todos.vue";
 
-const router = createRouter({
+const index = createRouter({
     history: createWebHistory(),
     routes: [
         {
@@ -18,4 +18,4 @@ const router = createRouter({
     ]
 });
 
-export default router;
+export default index;
