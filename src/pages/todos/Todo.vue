@@ -50,6 +50,11 @@
       Cancel
     </button>
   </form>
+  <Toast
+      v-if="showToast"
+      :message="toastMessage"
+      :type="toastAlertType"
+  />
 </template>
 
 <script>
@@ -58,8 +63,12 @@ import axios from "axios";
 import {computed, ref} from "vue";
 import {routes} from "@/router";
 import _ from "lodash";
+import Toast from "@/components/Toast.vue";
 
 export default {
+  components: {
+    Toast
+  },
   setup() {
     const endPoint = process.env.VUE_APP_DB + "/todos/";
     const route = useRoute();
@@ -67,13 +76,21 @@ export default {
     const todo = ref(null);
     const originalTodo = ref(null);
     const loading = ref(true);
+    const showToast = ref(false);
+    const toastMessage = ref('');
+    const toastAlertType = ref('');
     const todoId = route.params.id;
 
     const getTodo = async () => {
-      const res = await axios.get(endPoint + todoId);
-      todo.value = {...res.data};
-      originalTodo.value = {...res.data};
-      loading.value = false;
+      try {
+        const res = await axios.get(endPoint + todoId);
+        todo.value = {...res.data};
+        originalTodo.value = {...res.data};
+        loading.value = false;
+      } catch (err) {
+        console.log(err);
+        tiggerToast('Something went wrong!', 'danger');
+      }
     }
 
     const todoUpdated = computed(() => {
@@ -92,13 +109,30 @@ export default {
       });
     };
 
-    const onSave = async () => {
-      const res = await axios.put(endPoint + todoId, {
-        subject: todo.value.subject,
-        completed: todo.value.completed,
-      });
+    const tiggerToast = (message, type = 'success') => {
+      toastMessage.value = message;
+      toastAlertType.value = type;
+      showToast.value = true;
+      setTimeout(() => {
+        toastMessage.value = '';
+        toastAlertType.value = '';
+        showToast.value = false;
+      }, 3000)
+    }
 
-      originalTodo.value = {...res.data};
+    const onSave = async () => {
+      try {
+        const res = await axios.put(endPoint + todoId, {
+          subject: todo.value.subject,
+          completed: todo.value.completed,
+        });
+
+        originalTodo.value = {...res.data};
+        tiggerToast('Successfully saved!');
+      } catch (err) {
+        console.log(err);
+        tiggerToast('Something went wrong!', 'danger');
+      }
     }
 
     return {
@@ -108,6 +142,9 @@ export default {
       moveToTodoListPage,
       onSave,
       todoUpdated,
+      showToast,
+      toastMessage,
+      toastAlertType,
     };
   }
 }
