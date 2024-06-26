@@ -3,25 +3,27 @@ import Home from "@/pages/Home.vue";
 import Todos from "@/pages/todos/Todos.vue";
 import Todo from "@/pages/todos/Todo.vue";
 
-const index = createRouter({
+export const routes = {
+    home: {
+        path: '/',
+        name: 'Home',
+        component: Home,
+    },
+    todos: {
+        path: '/todos',
+        name: 'Todos',
+        component: Todos,
+    },
+    todo: {
+        path: '/todos/:id',
+        name: 'Todo',
+        component: Todo,
+    }
+};
+
+const router = createRouter({
     history: createWebHistory(),
-    routes: [
-        {
-            path: '/',
-            name: 'Home',
-            component: Home,
-        },
-        {
-            path: '/todos',
-            name: 'Todos',
-            component: Todos,
-        },
-        {
-            path: '/todos/:id',
-            name: 'Todo',
-            component: Todo,
-        },
-    ]
+    routes: Object.values(routes),
 });
 
-export default index;
+export default router;
